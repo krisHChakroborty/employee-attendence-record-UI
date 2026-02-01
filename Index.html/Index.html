@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIRST WAVE FRIES - Valentine’s Dice Offer</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff4d6d, #ff9a9e);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 { margin-bottom: 5px; }
+h2 { margin-top: 0; font-weight: normal; }
+
+.card {
+    background: #fff;
+    color: #333;
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 650px;
+    margin: 20px auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+th {
+    background: #ff4d6d;
+    color: #fff;
+}
+
+.scene {
+    perspective: 900px;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cube {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg) rotateY(20deg);
+}
+
+.face {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    font-weight: bold;
+    color: #ff4d6d;
+}
+
+.face1 { transform: rotateX(0deg) translateZ(50px); }
+.face2 { transform: rotateX(180deg) translateZ(50px); }
+.face3 { transform: rotateY(90deg) translateZ(50px); }
+.face4 { transform: rotateY(-90deg) translateZ(50px); }
+.face5 { transform: rotateX(90deg) translateZ(50px); }
+.face6 { transform: rotateX(-90deg) translateZ(50px); }
+
+.roll {
+    animation: fastRoll 2s ease-in-out;
+}
+
+@keyframes fastRoll {
+    0%   { transform: translateY(0) rotateX(0) rotateY(0); }
+    20%  { transform: translateY(-80px) rotateX(360deg) rotateY(360deg); }
+    40%  { transform: translateY(0) rotateX(720deg) rotateY(720deg); }
+    60%  { transform: translateY(-50px) rotateX(1080deg) rotateY(1080deg); }
+    80%  { transform: translateY(0) rotateX(1440deg) rotateY(1440deg); }
+    100% { transform: translateY(0) rotateX(1800deg) rotateY(1800deg); }
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin: 5px;
+    width: 200px;
+}
+
+button {
+    background: #ff4d6d;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background: #aaa;
+}
+
+.result {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.note {
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>❤️ Valentine’s Day Special ❤️</h1>
+<h2>FIRST WAVE FRIES</h2>
+<p><strong>Student Dice Fun Game</strong></p>
+
+<div class="card">
+    <h3>🎁 Discount Chart</h3>
+    <table>
+        <tr><th>Serial</th><th>Item</th><th>Discount</th></tr>
+        <tr><td>1</td><td>Burgers</td><td>10% OFF</td></tr>
+        <tr><td>2</td><td>Rolls</td><td>15% OFF</td></tr>
+        <tr><td>3</td><td>French Fries</td><td>20% OFF</td></tr>
+        <tr><td>4</td><td>Ice Creams</td><td>Buy 1 Get 1 Free</td></tr>
+        <tr><td>5</td><td>Milkshakes</td><td>25% OFF</td></tr>
+        <tr><td>6</td><td>Vada Pav / Chocolate Bun</td><td>₹30 OFF</td></tr>
+    </table>
+</div>
+
+<div class="card">
+    <h3>📝 Enter Your Details</h3>
+    <input type="text" id="studentName" placeholder="Your Name">
+    <input type="text" id="studentID" placeholder="Student ID"><br>
+    <button id="btn" onclick="rollDice()" disabled>SHAKE DICE 🎲</button>
+</div>
+
+<div class="card">
+    <h3>🎲 Dice Roll</h3>
+    <div class="scene">
+        <div class="cube" id="cube">
+            <div class="face face1">1</div>
+            <div class="face face2">2</div>
+            <div class="face face3">3</div>
+            <div class="face face4">4</div>
+            <div class="face face5">5</div>
+            <div class="face face6">6</div>
+        </div>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="note">
+        📸 Screenshot your lucky number!<br>
+        🎓 Show Student ID + Screenshot before billing
+    </div>
+</div>
+
+<script>
+// Dice rotations
+const diceRotations = {
+    1: "rotateX(0deg) rotateY(0deg)",
+    2: "rotateX(180deg) rotateY(0deg)",
+    3: "rotateX(0deg) rotateY(-90deg)",
+    4: "rotateX(0deg) rotateY(90deg)",
+    5: "rotateX(-90deg) rotateY(0deg)",
+    6: "rotateX(90deg) rotateY(0deg)"
+};
+
+// Discount offers
+const offers = {
+    1: "10% OFF on Burgers 🍔",
+    2: "15% OFF on Rolls 🌯",
+    3: "20% OFF on French Fries 🍟",
+    4: "Buy 1 Get 1 Free on Ice Creams 🍨",
+    5: "25% OFF on Milkshakes 🥤",
+    6: "₹30 OFF on Vada Pav / Chocolate Bun 🍫"
+};
+
+// Input fields and button
+const nameInput = document.getElementById("studentName");
+const idInput = document.getElementById("studentID");
+const shakeBtn = document.getElementById("btn");
+const result = document.getElementById("result");
+
+// Enable button only if both inputs filled
+[nameInput, idInput].forEach(input => {
+    input.addEventListener("input", () => {
+        shakeBtn.disabled = !(nameInput.value.trim() && idInput.value.trim());
+    });
+});
+
+// Store students who already rolled (in session)
+const rolledStudents = new Set();
+
+function rollDice() {
+    const studentKey = nameInput.value.trim() + "_" + idInput.value.trim();
+
+    if (rolledStudents.has(studentKey)) {
+        alert("You have already rolled the dice! ✅");
+        shakeBtn.disabled = true;
+        return;
+    }
+
+    rolledStudents.add(studentKey);
+    shakeBtn.disabled = true; // disable during roll
+
+    const cube = document.getElementById("cube");
+
+    // Fast dice rolling
+    cube.classList.add("roll");
+
+    let interval = setInterval(() => {
+        let temp = Math.floor(Math.random() * 6) + 1;
+        cube.style.transform = diceRotations[temp];
+    }, 100);
+
+    setTimeout(() => {
+        clearInterval(interval);
+        cube.classList.remove("roll");
+
+        // Final number
+        const final = Math.floor(Math.random() * 6) + 1;
+        cube.style.transform = diceRotations[final];
+
+        result.innerHTML = `🎉 Congratulations, ${nameInput.value}! 😀<br>
+        You got Serial No. ${final} — ${offers[final]}`;
+
+        // Disable button permanently for this student
+        shakeBtn.disabled = true;
+    }, 2500);
+}
+</script>
+
+</body>
+</html>
